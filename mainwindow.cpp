@@ -8,6 +8,10 @@ void rinbuffer_add(char zeichen){
     ringbuffer[head] = zeichen;
 }
 
+/** Versucht ein Zeichen in den Puffer aufzunehmen  
+ *  @param[in] zeichen Ein einzelnes Zeichen
+ *  @return 0, wenn das Zeichen gespiechert wurde, -1 wenn das nicht funktioniert hat
+ */
 int rinbuffer_get(char *zeichen){
 //    if(head == tail)
 //        return -1;
