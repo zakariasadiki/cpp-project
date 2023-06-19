@@ -21,7 +21,7 @@ private:
 
 public slots:
     void setInputText(QString text);
-    void setOutputText(QString text);
+    void setOutputText(QString);
 
 };
 #endif // MAINWINDOW_H
