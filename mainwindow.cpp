@@ -1,51 +1,63 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-char ringbuffer[512];
-int head = 0;
-int tail = 0;
-void rinbuffer_add(char zeichen){
-    ringbuffer[head] = zeichen;
-}
+#include <queue>
 
-/** Versucht ein Zeichen in den Puffer aufzunehmen  
- *  @param[in] zeichen Ein einzelnes Zeichen
- *  @return 0, wenn das Zeichen gespiechert wurde, -1 wenn das nicht funktioniert hat
- */
-int rinbuffer_get(char *zeichen){
-//    if(head == tail)
-//        return -1;
-//    else {
-//        *zeichen = ringbuffer[tail];
-//    }
-    return 0;
-}
+std::queue<char> ringBuffer;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    memset(ringbuffer, 0, sizeof(ringbuffer));
     ui->setupUi(this);
 }
 
-MainWindow::~MainWindow(){
+MainWindow::~MainWindow()
+{
     delete ui;
 }
 
-void MainWindow::setInputText(QString text){
+void MainWindow::setInputText(QString text)
+{
     ui->textEdit->setText(text);
+
+    // Speichern der Zeichen im Ringpuffer
+    for (int i = 0; i < text.length(); i++)
+    {
+        char c = text.at(i).toLatin1();
+        ringBuffer.push(c);
+    }
 }
 
-void MainWindow::setOutputText(QString text){
-    /*
-     * Aufgabe: Nehmen Sie bitte den Input (text) engegen und
-     * speichern Sie alle einzelnen Zeichen in einem Ringpuffer ab.
-     * anschließend gehen Sien den Rinpuffer von Beginn an durch und
-     * suchen sie nach einem Zeilenumbruch. Wenn Sie den Zeilenumbruch
-     * gefunden haben, entnehmen sie alle zeichen inklusive dem umbruch
-     * und geben ssie diese im unteren textfeld aus.
-     */
-    //ui->textEdit_2->setText(text);
-}
+void MainWindow::setOutputText(QString)
+{
+    QString outputText;
+    bool foundNewLine = false;
 
+    // Durchsuchen des Ringpuffers nach einem Zeilenumbruch
+    while (!ringBuffer.empty())
+    {
+        char c = ringBuffer.front();
+        ringBuffer.pop();
+
+        // Überprüfen, ob Zeilenumbruch gefunden wurde
+        if (c == '\n')
+        {
+            foundNewLine = true;
+            outputText.append(c);
+            break;
+        }
+
+        outputText.append(c);
+    }
+
+    // Ausgabe der Zeichen inklusive Zeilenumbruch
+    if (foundNewLine)
+    {
+        ui->textEdit_2->setText(outputText);
+    }
+    else
+    {
+        ui->textEdit_2->setText("Zeilenumbruch nicht gefunden.");
+    }
+}
