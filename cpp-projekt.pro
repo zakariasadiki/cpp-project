@@ -16,7 +16,8 @@ SOURCES += \
 
 HEADERS += \
     jitteryinput.h \
-    mainwindow.h
+    mainwindow.h \
+    ringbuffer.h
 
 FORMS += \
     mainwindow.ui
